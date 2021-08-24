@@ -5,15 +5,15 @@ Backend for the blog of etechsw
 1. Get a free API Key at [https://example.com](https://example.com)
 2. Clone the repo
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+   git clone https://Project-Name.git
    ```
-3. Install  docker 
+3. Install  dependencies
    ```sh
-   npm install
+    pip -r install requirements.txt
    ```
 4. Enter your run `config.js`
    ```JS
-    python 
+    python manage.py runserver
    ```
 
 
