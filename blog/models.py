@@ -8,21 +8,26 @@ from users.models import User
 class Category(models.Model):
     user = models.ForeignKey(User ,related_name="categories", on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False, unique=True)
-    slug = models.SlugField(default='', editable=False, max_length=200, unique=True)
+    slug = models.SlugField(default='', editable=False, max_length=200)
     description = models.TextField(max_length=200, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ['created_at']
-
-
+    def get_absolute_url(self):
+        kwargs = {
+            'pk': self.id,
+            'slug': self.slug
+        }
+        return reversed('category-pk-slug-detail', kwargs=kwargs)
 
 class Tag(models.Model): 
-    user = models.ForeignKey(User ,related_name="user_tags", on_delete=models.CASCADE)
+    author  = models.ForeignKey(User ,related_name="user_tags", on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False, unique=True)
-    slug = models.SlugField(default='', editable=False, max_length=200, unique=True)
+    slug = models.SlugField(default='', editable=False, max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         ordering = ['created_at']
+
 
 class Article(models.Model):
     STATUS_CHOICES = (
@@ -32,7 +37,8 @@ class Article(models.Model):
 
     user = models.ForeignKey(User ,related_name="posts_user", on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False, unique=True)
-    slug = models.SlugField(default='', editable=False, max_length=200, unique=True)
+    banner = models.URLField(max_length=200, blank=True)
+    slug = models.SlugField(default='', editable=False, max_length=200)
     description = models.TextField(max_length=200, blank=False)
     body = models.TextField(blank=False)
     category = models.ForeignKey(Category, related_name="posts_category", on_delete=models.CASCADE, blank=False)

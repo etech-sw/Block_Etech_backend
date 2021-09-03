@@ -14,7 +14,11 @@ from pathlib import Path
 import django_heroku
 from datetime import timedelta
 import os
-
+import environ# Initialise environment variables 
+env = environ.Env()
+environ.Env.read_env()
+import pymysql
+pymysql.install_as_MySQLdb()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,7 +63,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'blog.apps.BlogConfig',
 ]
-SITE_ID = 1 # new
+SITE_ID = 3 # new
 AUTH_USER_MODEL = 'users.User'
 ROLEPERMISSIONS_MODULE = 'backendEtech.roles'
 REST_USE_JWT = True
@@ -110,7 +114,9 @@ AUTHENTICATION_BACKENDS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,13 +135,23 @@ WSGI_APPLICATION = 'backendEtech.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#DATABASES = {
+    #'default': {
+       # 'ENGINE': 'django.db.backends.sqlite3',
+       # 'NAME': BASE_DIR / 'db.sqlite3',
+    #}
+#}
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE':'django.db.backends.mysql',
+        'NAME': 'mysql',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'db',
+        'PORT': '3306'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -188,13 +204,14 @@ ACCOUNT_UNIQUE_EMAIL = True # new
 #ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-LOGIN_URL = 'http://localhost:8000/api/user/login'
+LOGIN_URL = 'https://etech-blog.herokuapp.com/api/user/login'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.1und1.de'
-EMAIL_HOST_USER = 'noreply@etech-sw.org'
-EMAIL_HOST_PASSWORD = 'wTOYGwrJ5eOvuzzxLvFA'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = 'noreply@etech-sw.org'
 EMAIL_PORT = 587
 #send_mail('bonjour','here isthe message' ,'lucapameni@gmail.com' ,['luc.panta@facsciences-uy1.cm'] ,fail_silently=False)
 #from django.core.mail import send_mail

@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  etechblog:
+    container_name: backendetech
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+
+  db:
+    container_name: mysql
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    ports: 
+      - 3309:3306
+    volumes:
+      - /./dbdata/var/lib/mysql
